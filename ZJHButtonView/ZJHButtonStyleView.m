@@ -37,7 +37,7 @@
         self.textField.textColor = [UIColor colorWithRed:0.30f green:0.30f blue:0.30f alpha:1.00f];
         self.textField.font = [UIFont systemFontOfSize:13];
         //键盘类型
-//        self.textField.keyboardType = UIKeyboardTypeDecimalPad;
+        //self.textField.keyboardType = UIKeyboardTypeDecimalPad;
         // 设置是否在编辑时清空文本
         //self.textField.clearsOnBeginEditing = YES;
         // 设置清空按钮显示模式
