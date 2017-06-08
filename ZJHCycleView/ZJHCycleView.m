@@ -1,5 +1,6 @@
 //
 //  ZJHCycleView.m
+//  ZJH
 //
 //  Created by Apple on 2017/6/2.
 //  Copyright © 2017年 apple. All rights reserved.
@@ -52,7 +53,7 @@
         self.delegate = delegate;
         self.ploceholderImage = image;
         self.autoScrolled = autoScroll;
-
+        
         if (imageUrls.count) {
             self.urlbool = YES;
             self.bannerImages = [NSMutableArray arrayWithArray:imageUrls];
@@ -73,8 +74,13 @@
     self.bannerImages = [NSMutableArray arrayWithArray:imageUrls];
     if (!self.collectionView) {
         [self addCollectionView];
+    }else {
+        [self.collectionView reloadData];
+        if (self.autoScrolled && self.bannerImages.count > 1 && !self.timeState) {
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+            self.timeState = YES;
+        }
     }
-    [self.collectionView reloadData];
 }
 
 - (void)setLocalImageNameArray:(NSArray<NSString *> * )imageNames {
@@ -82,8 +88,13 @@
     self.bannerImages = [NSMutableArray arrayWithArray:imageNames];
     if (!self.collectionView) {
         [self addCollectionView];
+    }else {
+        [self.collectionView reloadData];
+        if (self.autoScrolled && self.bannerImages.count > 1 && !self.timeState) {
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+            self.timeState = YES;
+        }
     }
-    [self.collectionView reloadData];
 }
 
 - (void)setImageTitlesArray:(NSArray<NSString *> * )imageTitles {
@@ -124,7 +135,7 @@
     self.collectionView = collectionView;
     
     self.pageControll.numberOfPages = self.bannerImages.count;
-    if (self.autoScrolled) {
+    if (self.autoScrolled  && self.bannerImages.count > 1) {
         self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
         self.timeState = YES;
     }
@@ -238,7 +249,7 @@
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if (self.autoScrolled) {
+    if (self.autoScrolled && self.bannerImages.count > 1) {
         [self.timer invalidate];
         self.timer = nil;
         self.timeState = NO;
@@ -250,7 +261,7 @@
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if (self.autoScrolled) {
+    if (self.autoScrolled && self.bannerImages.count > 1) {
         self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
         self.timeState = YES;
     }
@@ -286,7 +297,7 @@
 //进入或离开当前页面时
 - (void)willMoveToWindow:(UIWindow *)newWindow {
     static int count = 0;
-    if (self.autoScrolled && count % 2) {
+    if (self.autoScrolled && count % 2 && self.bannerImages.count > 1) {
         if (self.timeState) {
             [self.timer invalidate];
             self.timer = nil;
