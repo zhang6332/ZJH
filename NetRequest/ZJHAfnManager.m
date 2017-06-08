@@ -122,16 +122,16 @@
             case AFNetworkReachabilityStatusReachableViaWWAN:
                 [timer invalidate];
                 timer = nil;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD showSuccess:@"正在使用数据网络"];
-                });
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [MBProgressHUD showSuccess:@"正在使用数据网络"];
+//                });
                 break;
             case AFNetworkReachabilityStatusReachableViaWiFi:
                 [timer invalidate];
                 timer = nil;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                     [MBProgressHUD showSuccess:@"正在使用WiFi网络"];
-                });
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                     [MBProgressHUD showSuccess:@"正在使用WiFi网络"];
+//                });
                 break;
             case AFNetworkReachabilityStatusNotReachable:
             {
@@ -214,7 +214,6 @@
         if ([ZJHAfnManager verifyToken]) {
             [parameters setObject:[ZJHAfnManager verifyToken] forKey:Token_key];
         }
-    
     }
     //显示加载
     if (HUDView) {

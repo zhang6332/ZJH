@@ -375,7 +375,8 @@
             button.center = CGPointMake((i + 1) * width - width / 2 , self.height / 2);
             button.tag = 605605 + i;
             [button setImage:[UIImage imageNamed:imageNames[i]] forState:UIControlStateNormal];
-            [button setImage:[UIImage imageNamed:selectedImageNames[i]] forState:UIControlStateSelected];
+            [button setImage:[UIImage imageNamed:selectedImageNames[i]] forState:UIControlStateHighlighted];
+//            [button setImage:[UIImage imageNamed:selectedImageNames[i]] forState:UIControlStateSelected];
             if (titles.count) {
                 button.titleLabel.adjustsFontSizeToFitWidth = YES;
                 button.titleLabel.font = [UIFont systemFontOfSize:12];
@@ -383,7 +384,7 @@
                 [button layoutButtonWithEdgeInsetsStyle:ZJHButtonEdgeInsetsStyleTop imageTitleSpace:nil];
                 [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
                 [button setTitleColor:[UIColor colorWithRed:0.03f green:0.50f blue:1.00f alpha:1.00f] forState:UIControlStateHighlighted];
-                [button setTitleColor:[UIColor colorWithRed:0.03f green:0.50f blue:1.00f alpha:1.00f] forState:UIControlStateSelected];
+//                [button setTitleColor:[UIColor colorWithRed:0.03f green:0.50f blue:1.00f alpha:1.00f] forState:UIControlStateSelected];
             }
             if (cornerRadius) {
                 button.clipsToBounds = YES;
@@ -592,13 +593,12 @@
 
 
 //textfieldDelegate
--(BOOL)textFieldShouldReturn:(UITextField *)textField{
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
 }
 
--(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if ([text isEqualToString:@"\n"]) {
         [textView resignFirstResponder];
         return NO;
