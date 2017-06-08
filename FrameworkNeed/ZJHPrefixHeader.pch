@@ -45,7 +45,6 @@
 #define NSLog(...)
 #endif
 
-//阿里请求
-#import "ZJHAliRequest.h"
+
 
 #endif /* ZJHPrefixHeader_pch */
