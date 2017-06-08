@@ -388,6 +388,7 @@
             if (cornerRadius) {
                 button.clipsToBounds = YES;
                 button.layer.cornerRadius = button.height * cornerRadius.floatValue;
+                button.backgroundColor = [UIColor whiteColor];
             }
             [button addTarget:self action:@selector(subButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:button];
