@@ -1,0 +1,52 @@
+//
+//  ZJHPrefixHeader.pch
+//  ancientMap
+//
+//  Created by Apple on 2017/5/2.
+//  Copyright © 2017年 张家浩. All rights reserved.
+//
+
+#ifndef ZJHPrefixHeader_pch
+#define ZJHPrefixHeader_pch
+
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+//类别
+#import "UIView+ZJH.h"
+#import "UIColor+ZJH.h"
+#import "NSString+ZJH.h"
+#import "CALayer+Anim.h"
+#import "UIImage+ZJH.h"
+#import "UIButton+ZJH.h"
+#import "UINavigationController+FDFullscreenPopGesture.h"
+
+//16进制颜色转换
+#define colorWithSix(sixteen) [UIColor stringTOColor:sixteen]
+
+#import "MJExtension.h"
+#import "UIImageView+WebCache.h"
+#import "MJRefresh.h"
+#import "MBProgressHUD+MJ.h"
+#import "STPickerSingle.h"
+#import "ZJHAfnManager.h"
+#import "ZJHScrollPages.h"
+#import "ZJHButtonStyleView.h"
+#import "ZJHAfnManager.h"
+//数据请求网址
+#import "ZJHRequestURL.h"
+//用户信息保存
+#import "ZJHUserInfoCoordinator.h"
+//注册
+#import "ZJHSignInController.h"
+//debug下打印方法名/行数
+#ifdef DEBUG
+#define NSLog(customFormat, ...) NSLog((@"medthod : %s---lineNumber : %d\n" customFormat), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+#define NSLog(...)
+#endif
+
+
+
+
+
+#endif /* ZJHPrefixHeader_pch */
