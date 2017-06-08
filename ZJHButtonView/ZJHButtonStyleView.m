@@ -389,7 +389,6 @@
                 button.clipsToBounds = YES;
                 button.layer.cornerRadius = button.height * cornerRadius.floatValue;
             }
-            button.backgroundColor = colorWithSix(@"#F6712E");
             [button addTarget:self action:@selector(subButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:button];
         }
