@@ -8,7 +8,7 @@
 
 #import "ZJHBaseController.h"
 #import "ZJHSignInController.h"
-#define BACKIMAGE @"back"
+#define BACKIMAGE @"backlan"
 @interface ZJHBaseController ()
 
 
