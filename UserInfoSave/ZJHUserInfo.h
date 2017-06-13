@@ -10,13 +10,13 @@
 
 @interface ZJHUserInfo : ZJHNSCodingModel
 
-
 @property (nonatomic ,copy) NSString * checkCode;
 @property (nonatomic ,copy) NSString * identityNumber;
 @property (nonatomic ,copy) NSString * mailbox;
 @property (nonatomic ,copy) NSString * nickname;
 @property (nonatomic ,copy) NSString * password;
 @property (nonatomic ,copy) NSString * phone;
+@property (nonatomic ,copy) NSString * portrait;
 @property (nonatomic ,copy) NSString * realname;
 @property (nonatomic ,copy) NSString * remark;
 @property (nonatomic ,copy) NSString * token;

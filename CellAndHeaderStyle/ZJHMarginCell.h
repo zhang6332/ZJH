@@ -11,5 +11,6 @@
 @interface ZJHMarginCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *marginLabel;
 @property (weak, nonatomic) IBOutlet UIView *lineView;
+@property (strong, nonatomic) IBOutlet UILabel *rightLabel;
 
 @end

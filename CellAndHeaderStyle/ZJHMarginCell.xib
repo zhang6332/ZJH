@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -39,6 +39,12 @@
                             <constraint firstAttribute="height" constant="15" id="hvv-xB-dig"/>
                         </constraints>
                     </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qmW-0g-eA2">
+                        <rect key="frame" x="334" y="50.5" width="0.0" height="0.0"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="zgu-FD-pkA" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="2H4-Lm-Crl"/>
@@ -47,14 +53,17 @@
                     <constraint firstAttribute="bottom" secondItem="zgu-FD-pkA" secondAttribute="bottom" id="6lm-gS-bPo"/>
                     <constraint firstItem="a9C-ke-YU9" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="AiN-UB-J0d"/>
                     <constraint firstItem="zgu-FD-pkA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="K9A-gZ-tMx"/>
+                    <constraint firstItem="a9C-ke-YU9" firstAttribute="leading" secondItem="qmW-0g-eA2" secondAttribute="trailing" constant="15" id="Q3N-Bs-7yV"/>
                     <constraint firstAttribute="trailingMargin" secondItem="a9C-ke-YU9" secondAttribute="trailing" constant="10" id="WFg-gE-Uk6"/>
                     <constraint firstAttribute="bottom" secondItem="nU4-It-D6w" secondAttribute="bottom" id="grp-f1-kZy"/>
                     <constraint firstAttribute="trailing" secondItem="nU4-It-D6w" secondAttribute="trailing" id="uoS-Je-xAa"/>
+                    <constraint firstItem="qmW-0g-eA2" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="z1H-o2-VYh"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="lineView" destination="nU4-It-D6w" id="IuR-FV-6BQ"/>
                 <outlet property="marginLabel" destination="zgu-FD-pkA" id="7FH-ej-1jP"/>
+                <outlet property="rightLabel" destination="qmW-0g-eA2" id="op7-hT-hwJ"/>
             </connections>
             <point key="canvasLocation" x="-73" y="12"/>
         </tableViewCell>
