@@ -45,7 +45,6 @@
     [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(jumpButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
-    
 }
 
 - (void)jumpButtonClicked:(UIButton *)button {

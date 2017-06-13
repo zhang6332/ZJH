@@ -182,8 +182,8 @@
     [formatter setTimeStyle:NSDateFormatterShortStyle];
     [formatter setDateFormat:@"yyyy年MM月dd日 HH:mm:ss"];
     //毫秒值转化为秒
-    NSDate* date = [NSDate dateWithTimeIntervalSince1970:[string doubleValue] / 1000.0];
-    NSString* dateString = [formatter stringFromDate:date];
+    NSDate * date = [NSDate dateWithTimeIntervalSince1970:[string doubleValue] / 1000.0];
+    NSString * dateString = [formatter stringFromDate:date];
     return dateString;
 }
 //获取当前系统时间
