@@ -9,6 +9,7 @@
 #import "ZJHCycleView.h"
 #define CellSNumber  10000
 #define CellReuseIdentifier @"CellReuseIdentifier"
+#define AUTOTIME 5
 #import "UIImageView+WebCache.h"
 #import "ZJHCycleViewCell.h"
 @interface ZJHCycleView ()<UICollectionViewDelegate,UICollectionViewDataSource,ZJHCycleViewCellDelegate>
@@ -65,7 +66,7 @@
             }];
             UIAlertAction * action1 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 if (self.autoScrolled && self.bannerImages.count > 1) {
-                    self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+                    self.timer = [NSTimer scheduledTimerWithTimeInterval:AUTOTIME target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
                     self.timeState = YES;
                 }
             }];
@@ -119,7 +120,7 @@
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"保存图片被阻止了" message:[NSString stringWithFormat:@"请到系统->“设置”->“隐私”->“照片”中开启“%@”访问权限",appName] preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction * action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             if (self.autoScrolled && self.bannerImages.count > 1) {
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+                self.timer = [NSTimer scheduledTimerWithTimeInterval:AUTOTIME target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
                 self.timeState = YES;
             }
         }];
@@ -130,7 +131,7 @@
         UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"保存图片成功" message:@"已保存至相册" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction * action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             if (self.autoScrolled && self.bannerImages.count > 1) {
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+                self.timer = [NSTimer scheduledTimerWithTimeInterval:AUTOTIME target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
                 self.timeState = YES;
             }
         }];
@@ -171,7 +172,7 @@
     }else {
         [self.collectionView reloadData];
         if (self.autoScrolled && self.bannerImages.count > 1 && !self.timeState) {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:AUTOTIME target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
             self.timeState = YES;
         }
     }
@@ -185,7 +186,7 @@
     }else {
         [self.collectionView reloadData];
         if (self.autoScrolled && self.bannerImages.count > 1 && !self.timeState) {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:AUTOTIME target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
             self.timeState = YES;
         }
     }
@@ -230,7 +231,7 @@
     
     self.pageControll.numberOfPages = self.bannerImages.count;
     if (self.autoScrolled  && self.bannerImages.count > 1) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:AUTOTIME target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
         self.timeState = YES;
     }
 }
@@ -353,7 +354,7 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (self.autoScrolled && self.bannerImages.count > 1) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:AUTOTIME target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
         self.timeState = YES;
     }
 }
@@ -394,7 +395,7 @@
             self.timer = nil;
             self.timeState = NO;
         }else {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:AUTOTIME target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
             self.timeState = YES;
         }
     }
