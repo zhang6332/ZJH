@@ -11,7 +11,7 @@
 #define CellReuseIdentifier @"CellReuseIdentifier"
 #import "UIImageView+WebCache.h"
 #import "ZJHCycleViewCell.h"
-@interface ZJHCycleView ()<UICollectionViewDelegate,UICollectionViewDataSource,UIActionSheetDelegate>
+@interface ZJHCycleView ()<UICollectionViewDelegate,UICollectionViewDataSource,ZJHCycleViewCellDelegate>
 @property(nonatomic ,strong) NSMutableArray * bannerImages;
 @property(nonatomic ,strong) NSMutableArray * imageTitles;
 @property(nonatomic ,strong) UIPageControl * pageControll;
@@ -46,48 +46,67 @@
     return _imageTitles;
 }
 
-//添加双击隐藏标题事件
-- (void)CancelReviewTitle:(UITapGestureRecognizer *)doubleTap {
-    NSIndexPath * indexPath = [NSIndexPath indexPathForItem:[self currentIndex] inSection:0];
-    ZJHCycleViewCell * cell = (ZJHCycleViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    cell.titleLabel.hidden = !cell.titleLabel.hidden;
-    //    NSInteger index = indexPath.item % self.bannerImages.count;
-//    if (self.imageTitles && self.imageTitles.count > index) {
-//        cell.titleLabel.text = self.imageTitles[index];
-//    }else {
-//        cell.titleLabel.text = @"";
-//    }
 
-}
+- (void)ZJHCycleViewCellDelegateTapsNumber:(NSInteger)tapCount withZJHCycleViewCell:(ZJHCycleViewCell *)cycleViewCell andTapGesture:(UIGestureRecognizer *)tapGesture {
+    
+    switch (tapCount) {
+        case 0:
+        {
+            if (self.autoScrolled && self.bannerImages.count > 1) {
+                [self.timer invalidate];
+                self.timer = nil;
+                self.timeState = NO;
+            }
+            /**警告弹出*/
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"保存图片到相册" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction * action = [UIAlertAction actionWithTitle:@"保存" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                //保存图片到相册
+                UIImageWriteToSavedPhotosAlbum(cycleViewCell.imagesView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+            }];
+            UIAlertAction * action1 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                if (self.autoScrolled && self.bannerImages.count > 1) {
+                    self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+                    self.timeState = YES;
+                }
+            }];
+            [alert addAction:action1];
+            [alert addAction:action];
+            [[CALayer getCurrentController] presentViewController:alert animated:YES completion:nil];
+        }
+            
+            break;
+        case 1:
+        {
+            if ([self.delegate respondsToSelector:@selector(ZJHCycleViewDelegateCollectionView:didSelectItemAtIndexPath:)]) {
+                [self.delegate ZJHCycleViewDelegateCollectionView:self.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:(((NSIndexPath *)cycleViewCell.parameterId).row % self.bannerImages.count) inSection:0]];
+            }
 
-//添加三击放大缩小事件
-- (void)zoomInOrOut:(UITapGestureRecognizer *)tapGesture {
-    if (self.collectionView.zoomScale == self.collectionView.minimumZoomScale) {
-        CGPoint point = [tapGesture locationInView:self];
-        [self.collectionView zoomToRect:CGRectMake(point.x - 24, point.y - 24 , 48, 48) animated:YES];
-    }else {
-        [self.collectionView setZoomScale:1.0f animated:YES];
-    }
-}
+        }
+            break;
+        case 2:
+        {
+            cycleViewCell.titleLabel.hidden = !cycleViewCell.titleLabel.hidden;
+        }
+            break;
+        case 3:
+        {
+            if (self.autoScrolled && self.bannerImages.count > 1) {
+                [self.timer invalidate];
+                self.timer = nil;
+                self.timeState = NO;
+            }
+            if (self.collectionView.zoomScale == self.collectionView.minimumZoomScale) {
+                CGPoint point = [tapGesture locationInView:self];
+                [self.collectionView zoomToRect:CGRectMake(point.x - 24, point.y - 24 , 48, 48) animated:YES];
+            }else {
+                [self.collectionView setZoomScale:1.0f animated:YES];
+            }
 
-#pragma mark -- long press gesture method
-- (void)SaveImageToAlbum:(UIGestureRecognizer *)gesture
-{
-    if (gesture.state == UIGestureRecognizerStateBegan)
-    {
-        UIActionSheet *pActionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"保存图片到相册", nil];
-        [pActionSheet showInView:self];
-    }
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex != actionSheet.cancelButtonIndex)
-    {
-        NSIndexPath * indexPath = [NSIndexPath indexPathForItem:[self currentIndex] inSection:0];
-        ZJHCycleViewCell * cell = (ZJHCycleViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-        //保存图片到相册
-        UIImageWriteToSavedPhotosAlbum(cell.imagesView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+        }
+            
+            break;
+        default:
+            break;
     }
 }
 
@@ -96,12 +115,27 @@
     if (error != NULL){
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         NSString *appName = [infoDictionary objectForKey:@"CFBundleName"];
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"保存图片被阻止了" message:[NSString stringWithFormat:@"请到系统->“设置”->“隐私”->“照片”中开启“%@”访问权限",appName] delegate:nil cancelButtonTitle:@"好的" otherButtonTitles: nil];
-        [alertView show];
+        /**警告弹出*/
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"保存图片被阻止了" message:[NSString stringWithFormat:@"请到系统->“设置”->“隐私”->“照片”中开启“%@”访问权限",appName] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction * action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            if (self.autoScrolled && self.bannerImages.count > 1) {
+                self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+                self.timeState = YES;
+            }
+        }];
+        [alert addAction:action];
+        [[CALayer getCurrentController] presentViewController:alert animated:YES completion:nil];
     } else {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"已保存至照片库"delegate:nil cancelButtonTitle:@"好的" otherButtonTitles: nil] ;
-        [alertView show];
+        /**警告弹出*/
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"保存图片成功" message:@"已保存至相册" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction * action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            if (self.autoScrolled && self.bannerImages.count > 1) {
+                self.timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
+                self.timeState = YES;
+            }
+        }];
+        [alert addAction:action];
+        [[CALayer getCurrentController] presentViewController:alert animated:YES completion:nil];
     }
 }
 
@@ -111,22 +145,9 @@
         self.delegate = delegate;
         self.ploceholderImage = image;
         self.autoScrolled = autoScroll;
+        //比例
         self.collectionView.minimumZoomScale = 1.0f;
         self.collectionView.maximumZoomScale = 3.0f;
-        //添加双击隐藏标题事件
-        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(CancelReviewTitle:)];
-        doubleTap.numberOfTapsRequired = 2;
-        [self addGestureRecognizer:doubleTap];
-        //添加三击放大缩小事件
-        UITapGestureRecognizer *threeTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(zoomInOrOut:)];
-        threeTap.numberOfTapsRequired = 3;
-        [self addGestureRecognizer:threeTap];
-        //约束单击和双击不能同时生效
-        [doubleTap requireGestureRecognizerToFail:doubleTap];
-        //添加长按保存图片事件
-        UILongPressGestureRecognizer *pSaveImage = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(SaveImageToAlbum:)];
-        [self addGestureRecognizer:pSaveImage];
-
         if (imageUrls.count) {
             self.urlbool = YES;
             self.bannerImages = [NSMutableArray arrayWithArray:imageUrls];
@@ -270,13 +291,10 @@
     }else {
         cell.titleLabel.text = @"";
     }
+    cell.titleLabel.hidden = NO;
+    cell.delegate = self;
+    cell.parameterId = indexPath;
     return cell;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.delegate respondsToSelector:@selector(ZJHCycleViewDelegateCollectionView:didSelectItemAtIndexPath:)]) {
-        [self.delegate ZJHCycleViewDelegateCollectionView:collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:(indexPath.row % self.bannerImages.count) inSection:0]];
-    }
 }
 
 #pragma mark----NSTimer----
