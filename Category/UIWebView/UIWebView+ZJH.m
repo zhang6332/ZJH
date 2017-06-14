@@ -27,6 +27,18 @@
     return len;
 }
 
+//删除标签
+- (void)removeElementsByClassName:(NSString *)tag {
+    NSString *jsString = [NSString stringWithFormat:@"document.getElementsByClassName('%@').length", tag];
+    int len = [[self stringByEvaluatingJavaScriptFromString:jsString] intValue];
+    for (int i = 0; i < len; i++) {
+        //利用重定向获取img.src，为区分，给url添加'img:'前缀
+        NSString *jsString = [NSString stringWithFormat:
+                              @"document.getElementsByClassName('%@')[%d].remove()",tag,i];
+        [self stringByEvaluatingJavaScriptFromString:jsString];
+    }
+}
+
 //获取当前页面URL
 - (NSString *)getCurrentURL {
     return HTML_STRING_NIL_TO_NONE_IF([self stringByEvaluatingJavaScriptFromString:@"document.location.href"]);

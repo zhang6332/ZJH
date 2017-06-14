@@ -12,6 +12,9 @@
 //获取某个标签的结点个数
 - (int)nodeCountOfTag:(NSString *)tag;
 
+//删除标签
+- (void)removeElementsByClassName:(NSString *)tag;
+
 //获取当前页面URL
 - (NSString *)getCurrentURL;
 
