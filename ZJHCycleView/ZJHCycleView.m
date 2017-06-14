@@ -90,11 +90,11 @@
             break;
         case 3:
         {
-            if (self.autoScrolled && self.bannerImages.count > 1) {
-                [self.timer invalidate];
-                self.timer = nil;
-                self.timeState = NO;
-            }
+//            if (self.autoScrolled && self.bannerImages.count > 1) {
+//                [self.timer invalidate];
+//                self.timer = nil;
+//                self.timeState = NO;
+//            }
             if (self.collectionView.zoomScale == self.collectionView.minimumZoomScale) {
                 CGPoint point = [tapGesture locationInView:self];
                 [self.collectionView zoomToRect:CGRectMake(point.x - 24, point.y - 24 , 48, 48) animated:YES];
