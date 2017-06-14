@@ -11,7 +11,7 @@
 #define CellReuseIdentifier @"CellReuseIdentifier"
 #import "UIImageView+WebCache.h"
 #import "ZJHCycleViewCell.h"
-@interface ZJHCycleView ()<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface ZJHCycleView ()<UICollectionViewDelegate,UICollectionViewDataSource,UIActionSheetDelegate>
 @property(nonatomic ,strong) NSMutableArray * bannerImages;
 @property(nonatomic ,strong) NSMutableArray * imageTitles;
 @property(nonatomic ,strong) UIPageControl * pageControll;
@@ -46,6 +46,64 @@
     return _imageTitles;
 }
 
+//添加双击隐藏标题事件
+- (void)CancelReviewTitle:(UITapGestureRecognizer *)doubleTap {
+    NSIndexPath * indexPath = [NSIndexPath indexPathForItem:[self currentIndex] inSection:0];
+    ZJHCycleViewCell * cell = (ZJHCycleViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+    cell.titleLabel.hidden = !cell.titleLabel.hidden;
+    //    NSInteger index = indexPath.item % self.bannerImages.count;
+//    if (self.imageTitles && self.imageTitles.count > index) {
+//        cell.titleLabel.text = self.imageTitles[index];
+//    }else {
+//        cell.titleLabel.text = @"";
+//    }
+
+}
+
+//添加三击放大缩小事件
+- (void)zoomInOrOut:(UITapGestureRecognizer *)tapGesture {
+    if (self.collectionView.zoomScale == self.collectionView.minimumZoomScale) {
+        CGPoint point = [tapGesture locationInView:self];
+        [self.collectionView zoomToRect:CGRectMake(point.x - 24, point.y - 24 , 48, 48) animated:YES];
+    }else {
+        [self.collectionView setZoomScale:1.0f animated:YES];
+    }
+}
+
+#pragma mark -- long press gesture method
+- (void)SaveImageToAlbum:(UIGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        UIActionSheet *pActionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"保存图片到相册", nil];
+        [pActionSheet showInView:self];
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex != actionSheet.cancelButtonIndex)
+    {
+        NSIndexPath * indexPath = [NSIndexPath indexPathForItem:[self currentIndex] inSection:0];
+        ZJHCycleViewCell * cell = (ZJHCycleViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+        //保存图片到相册
+        UIImageWriteToSavedPhotosAlbum(cell.imagesView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    }
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    if (error != NULL){
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        NSString *appName = [infoDictionary objectForKey:@"CFBundleName"];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"保存图片被阻止了" message:[NSString stringWithFormat:@"请到系统->“设置”->“隐私”->“照片”中开启“%@”访问权限",appName] delegate:nil cancelButtonTitle:@"好的" otherButtonTitles: nil];
+        [alertView show];
+    } else {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"已保存至照片库"delegate:nil cancelButtonTitle:@"好的" otherButtonTitles: nil] ;
+        [alertView show];
+    }
+}
 
 - (instancetype)initWithFrame:(CGRect)frame delegate:(id)delegate imageUrlArray:(NSArray *) imageUrls placeholderImageName:(UIImage *)image orLocalImageNameArray:(NSArray *)imageNames andImageTitles:(NSArray *)imageTitles autoScroll:(BOOL)autoScroll {
     
@@ -53,7 +111,22 @@
         self.delegate = delegate;
         self.ploceholderImage = image;
         self.autoScrolled = autoScroll;
-        
+        self.collectionView.minimumZoomScale = 1.0f;
+        self.collectionView.maximumZoomScale = 3.0f;
+        //添加双击隐藏标题事件
+        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(CancelReviewTitle:)];
+        doubleTap.numberOfTapsRequired = 2;
+        [self addGestureRecognizer:doubleTap];
+        //添加三击放大缩小事件
+        UITapGestureRecognizer *threeTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(zoomInOrOut:)];
+        threeTap.numberOfTapsRequired = 3;
+        [self addGestureRecognizer:threeTap];
+        //约束单击和双击不能同时生效
+        [doubleTap requireGestureRecognizerToFail:doubleTap];
+        //添加长按保存图片事件
+        UILongPressGestureRecognizer *pSaveImage = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(SaveImageToAlbum:)];
+        [self addGestureRecognizer:pSaveImage];
+
         if (imageUrls.count) {
             self.urlbool = YES;
             self.bannerImages = [NSMutableArray arrayWithArray:imageUrls];
