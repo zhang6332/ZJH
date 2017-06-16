@@ -24,8 +24,12 @@
 @property (nonatomic ,assign) BOOL autoScrolled;
 /** 滚动次数 */
 @property (nonatomic ,assign) int scrollNum;
-
+//图层
 @property (nonatomic ,strong) UICollectionViewFlowLayout * flowLayout;
+//图片初始
+@property (nonatomic ,assign) CGAffineTransform initTransform;
+/** 是否缩放过 */
+@property (nonatomic ,assign) BOOL trBool;
 
 @end
 @implementation ZJHCycleView
@@ -49,6 +53,12 @@
 
 
 - (void)ZJHCycleViewCellDelegateTapsNumber:(NSInteger)tapCount withZJHCycleViewCell:(ZJHCycleViewCell *)cycleViewCell andTapGesture:(UIGestureRecognizer *)tapGesture {
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        self.initTransform = cycleViewCell.imagesView.transform;
+        self.trBool = YES;
+    });
     
     switch (tapCount) {
         case 0:
@@ -90,21 +100,39 @@
         }
             break;
         case 3:
-        {
-//            if (self.autoScrolled && self.bannerImages.count > 1) {
-//                [self.timer invalidate];
-//                self.timer = nil;
-//                self.timeState = NO;
-//            }
-            if (self.collectionView.zoomScale == self.collectionView.minimumZoomScale) {
-                CGPoint point = [tapGesture locationInView:self];
-                [self.collectionView zoomToRect:CGRectMake(point.x - 24, point.y - 24 , 48, 48) animated:YES];
-            }else {
-                [self.collectionView setZoomScale:1.0f animated:YES];
-            }
+        {////////////////////
 
+            if (self.autoScrolled && self.bannerImages.count > 1) {
+                [self.timer invalidate];
+                self.timer = nil;
+                self.timeState = NO;
+            }
+            //旋转
+            cycleViewCell.imagesView.transform = CGAffineTransformRotate(cycleViewCell.imagesView.transform, ((UIRotationGestureRecognizer *)tapGesture).rotation);
+            ((UIRotationGestureRecognizer *)tapGesture).rotation = 0;
         }
-            
+            break;
+        case 4:
+        {////////////////////
+            if (self.autoScrolled && self.bannerImages.count > 1) {
+                [self.timer invalidate];
+                self.timer = nil;
+                self.timeState = NO;
+            }
+            //缩放
+            CGFloat scale = ((UIPinchGestureRecognizer *)tapGesture).scale;
+            //放大情况
+            if(scale > 1.0){
+                if(cycleViewCell.imageScale > 5) return;
+            }
+            //缩小情况
+            if (scale < 1.0) {
+                if (cycleViewCell.imageScale < 0.5) return;
+            }
+            cycleViewCell.imagesView.transform = CGAffineTransformScale(cycleViewCell.imagesView.transform, scale, scale);
+            cycleViewCell.imageScale *= scale;
+            ((UIPinchGestureRecognizer *)tapGesture).scale = 1.0;
+        }
             break;
         default:
             break;
@@ -146,9 +174,6 @@
         self.delegate = delegate;
         self.ploceholderImage = image;
         self.autoScrolled = autoScroll;
-        //比例
-        self.collectionView.minimumZoomScale = 1.0f;
-        self.collectionView.maximumZoomScale = 3.0f;
         if (imageUrls.count) {
             self.urlbool = YES;
             self.bannerImages = [NSMutableArray arrayWithArray:imageUrls];
@@ -228,7 +253,6 @@
     [collectionView registerNib:[UINib nibWithNibName:@"ZJHCycleViewCell" bundle:nil] forCellWithReuseIdentifier:CellReuseIdentifier];
     [self addSubview:collectionView];
     self.collectionView = collectionView;
-    
     self.pageControll.numberOfPages = self.bannerImages.count;
     if (self.autoScrolled  && self.bannerImages.count > 1) {
         self.timer = [NSTimer scheduledTimerWithTimeInterval:AUTOTIME target:self selector:@selector(autoScroll) userInfo:nil repeats:YES];
@@ -292,6 +316,10 @@
     }else {
         cell.titleLabel.text = @"";
     }
+    if (self.trBool) {
+        cell.imagesView.transform = self.initTransform;
+    }
+    cell.imageScale = 1;
     cell.titleLabel.hidden = NO;
     cell.delegate = self;
     cell.parameterId = indexPath;
@@ -365,7 +393,18 @@
         //代理
         [self.delegate ZJHCycleViewDelegateCollectionView:(UICollectionView *)scrollView didScrollItemAtIndexPath:[NSIndexPath indexPathForItem:self.pageControll.currentPage inSection:0]];
     }
+////////
+    NSInteger iCurrentPage = roundf(scrollView.contentOffset.x / scrollView.frame.size.width);
+    static NSInteger currentPage = 0;
+    if (iCurrentPage != currentPage) {
+//        self.imageScale = 1;
+        currentPage = iCurrentPage;
+    }
+
+///////
 }
+
+///////////////////////////
 
 //当前自动滚动的页面
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
@@ -405,9 +444,6 @@
 -(void)dealloc {
     NSLog(@"ZJHCycleView释放了");
 }
-
-
-
 
 
 @end

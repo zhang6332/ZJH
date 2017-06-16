@@ -19,19 +19,26 @@
 - (void)addSubGestures {
     //添加双击隐藏标题事件
     UITapGestureRecognizer * singleTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(singleTap:)];
+    singleTap.numberOfTouchesRequired =1;
+    singleTap.numberOfTapsRequired = 1;
+
     [self addGestureRecognizer:singleTap];
     //添加双击隐藏标题事件
-    UITapGestureRecognizer * doubleTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(CancelReviewTitle:)];
+    UITapGestureRecognizer * doubleTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(cancelReviewTitle:)];
+    doubleTap.numberOfTouchesRequired = 1;
     doubleTap.numberOfTapsRequired = 2;
     [self addGestureRecognizer:doubleTap];
-    //添加三击放大缩小事件
-    UITapGestureRecognizer * threeTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(zoomInOrOut:)];
-    threeTap.numberOfTapsRequired = 3;
-    [self addGestureRecognizer:threeTap];
+    //创建捏合手势放大缩小事件
+    UIPinchGestureRecognizer * pinch = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(zoomInOrOut:)];
+    [self addGestureRecognizer:pinch];
+    //创建旋转手势
+    UIRotationGestureRecognizer * tota = [[UIRotationGestureRecognizer alloc]initWithTarget:self action:@selector(ratoGestureRecognize:)];
+    [self addGestureRecognizer:tota];
+    
     //约束单击和双击不能同时生效
     [singleTap requireGestureRecognizerToFail:doubleTap];
-    [singleTap requireGestureRecognizerToFail:threeTap];
-    [doubleTap requireGestureRecognizerToFail:threeTap];
+    [singleTap requireGestureRecognizerToFail:pinch];
+    [doubleTap requireGestureRecognizerToFail:pinch];
     //添加长按保存图片事件
     UILongPressGestureRecognizer * pSaveImage = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(SaveImageToAlbum:)];
     [self addGestureRecognizer:pSaveImage];
@@ -44,16 +51,23 @@
 }
 
 //添加双击隐藏标题事件
-- (void)CancelReviewTitle:(UITapGestureRecognizer *)doubleTap {
+- (void)cancelReviewTitle:(UITapGestureRecognizer *)doubleTap {
     if ([self.delegate respondsToSelector:@selector(ZJHCycleViewCellDelegateTapsNumber:withZJHCycleViewCell:andTapGesture:)]) {
         [self.delegate ZJHCycleViewCellDelegateTapsNumber:2 withZJHCycleViewCell:self andTapGesture:doubleTap];
     }
 }
 
-//添加三击放大缩小事件
-- (void)zoomInOrOut:(UITapGestureRecognizer *)tapGesture {
+//添加放大缩小事件
+- (void)zoomInOrOut:(UIPinchGestureRecognizer *)PinchGesture {
     if ([self.delegate respondsToSelector:@selector(ZJHCycleViewCellDelegateTapsNumber:withZJHCycleViewCell:andTapGesture:)]) {
-        [self.delegate ZJHCycleViewCellDelegateTapsNumber:3 withZJHCycleViewCell:self andTapGesture:tapGesture];
+        [self.delegate ZJHCycleViewCellDelegateTapsNumber:4 withZJHCycleViewCell:self andTapGesture:PinchGesture];
+    }
+}
+
+//添加旋转事件
+- (void)ratoGestureRecognize:(UIRotationGestureRecognizer *)RotationGesture {
+    if ([self.delegate respondsToSelector:@selector(ZJHCycleViewCellDelegateTapsNumber:withZJHCycleViewCell:andTapGesture:)]) {
+        [self.delegate ZJHCycleViewCellDelegateTapsNumber:3 withZJHCycleViewCell:self andTapGesture:RotationGesture];
     }
 }
 
