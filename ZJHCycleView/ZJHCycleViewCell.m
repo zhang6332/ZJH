@@ -19,7 +19,7 @@
 - (void)addSubGestures {
     //添加双击隐藏标题事件
     UITapGestureRecognizer * singleTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(singleTap:)];
-    singleTap.numberOfTouchesRequired =1;
+    singleTap.numberOfTouchesRequired = 1;
     singleTap.numberOfTapsRequired = 1;
 
     [self addGestureRecognizer:singleTap];
@@ -34,11 +34,18 @@
     //创建旋转手势
     UIRotationGestureRecognizer * tota = [[UIRotationGestureRecognizer alloc]initWithTarget:self action:@selector(ratoGestureRecognize:)];
     [self addGestureRecognizer:tota];
-    
     //约束单击和双击不能同时生效
     [singleTap requireGestureRecognizerToFail:doubleTap];
-    [singleTap requireGestureRecognizerToFail:pinch];
-    [doubleTap requireGestureRecognizerToFail:pinch];
+
+    //平移
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panView:)];
+
+    [panGesture setMinimumNumberOfTouches:2];
+    [panGesture setMaximumNumberOfTouches:2];
+    [self addGestureRecognizer:panGesture];
+
+    
+    
     //添加长按保存图片事件
     UILongPressGestureRecognizer * pSaveImage = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(SaveImageToAlbum:)];
     [self addGestureRecognizer:pSaveImage];
@@ -69,6 +76,30 @@
     if ([self.delegate respondsToSelector:@selector(ZJHCycleViewCellDelegateTapsNumber:withZJHCycleViewCell:andTapGesture:)]) {
         [self.delegate ZJHCycleViewCellDelegateTapsNumber:3 withZJHCycleViewCell:self andTapGesture:RotationGesture];
     }
+}
+
+
+
+// 处理拖拉手势
+- (void) panView:(UIPanGestureRecognizer *)panGestureRecognizer {
+    
+    if ([self.delegate respondsToSelector:@selector(ZJHCycleViewCellDelegateTapsNumber:withZJHCycleViewCell:andTapGesture:)]) {
+        [self.delegate ZJHCycleViewCellDelegateTapsNumber:5 withZJHCycleViewCell:self andTapGesture:panGestureRecognizer];
+    }
+    
+//    if (panGestureRecognizer.state == UIGestureRecognizerStateBegan || panGestureRecognizer.state == UIGestureRecognizerStateChanged) {
+//        if (self.imagesView.x > self.imagesView.superview.width / 4 || self.imagesView.superview.width - CGRectGetMaxX(self.imagesView.frame) > self.imagesView.superview.width / 4 || self.imagesView.y > self.imagesView.superview.height / 4 || self.imagesView.superview.height - CGRectGetMaxY(self.imagesView.frame) > self.imagesView.superview.height / 4) {
+//            [UIView animateWithDuration:0.5 animations:^{
+//                self.imagesView.center = CGPointMake(self.imagesView.superview.width / 2, self.imagesView.superview.height / 2);
+//            } completion:^(BOOL finished) {
+//            }];
+//            [panGestureRecognizer setTranslation:CGPointZero inView:self.imagesView.superview];
+//            return;
+//        }
+//        CGPoint translation = [panGestureRecognizer translationInView:self.imagesView.superview];
+//        [self.imagesView setCenter:(CGPoint){self.imagesView.center.x + translation.x, self.imagesView.center.y + translation.y}];
+//        [panGestureRecognizer setTranslation:CGPointZero inView:self.imagesView.superview];
+//    }
 }
 
 #pragma mark -- long press gesture method

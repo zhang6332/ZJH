@@ -100,38 +100,65 @@
         }
             break;
         case 3:
-        {////////////////////
-
+        {
             if (self.autoScrolled && self.bannerImages.count > 1) {
                 [self.timer invalidate];
                 self.timer = nil;
                 self.timeState = NO;
             }
             //旋转
-            cycleViewCell.imagesView.transform = CGAffineTransformRotate(cycleViewCell.imagesView.transform, ((UIRotationGestureRecognizer *)tapGesture).rotation);
-            ((UIRotationGestureRecognizer *)tapGesture).rotation = 0;
+            if (((UIRotationGestureRecognizer *)tapGesture).state == UIGestureRecognizerStateBegan || ((UIRotationGestureRecognizer *)tapGesture).state == UIGestureRecognizerStateChanged) {
+                
+                cycleViewCell.imagesView.transform = CGAffineTransformRotate(cycleViewCell.imagesView.transform, ((UIRotationGestureRecognizer *)tapGesture).rotation);
+                ((UIRotationGestureRecognizer *)tapGesture).rotation = 0;
+            }
         }
             break;
         case 4:
-        {////////////////////
+        {
             if (self.autoScrolled && self.bannerImages.count > 1) {
                 [self.timer invalidate];
                 self.timer = nil;
                 self.timeState = NO;
             }
-            //缩放
-            CGFloat scale = ((UIPinchGestureRecognizer *)tapGesture).scale;
-            //放大情况
-            if(scale > 1.0){
-                if(cycleViewCell.imageScale > 5) return;
+            if (((UIPinchGestureRecognizer *)tapGesture).state == UIGestureRecognizerStateBegan || ((UIPinchGestureRecognizer *)tapGesture).state == UIGestureRecognizerStateChanged) {
+                //缩放
+                CGFloat scale = ((UIPinchGestureRecognizer *)tapGesture).scale;
+                //放大情况
+                if(scale > 1.0){
+                    if(cycleViewCell.imageScale > 5) return;
+                }
+                //缩小情况
+                if (scale < 1.0) {
+                    if (cycleViewCell.imageScale < 0.5) return;
+                }
+                cycleViewCell.imagesView.transform = CGAffineTransformScale(cycleViewCell.imagesView.transform, scale, scale);
+                cycleViewCell.imageScale *= scale;
+                ((UIPinchGestureRecognizer *)tapGesture).scale = 1.0;
             }
-            //缩小情况
-            if (scale < 1.0) {
-                if (cycleViewCell.imageScale < 0.5) return;
+        }
+            break;
+            case 5:
+        {
+            if (self.autoScrolled && self.bannerImages.count > 1) {
+                [self.timer invalidate];
+                self.timer = nil;
+                self.timeState = NO;
             }
-            cycleViewCell.imagesView.transform = CGAffineTransformScale(cycleViewCell.imagesView.transform, scale, scale);
-            cycleViewCell.imageScale *= scale;
-            ((UIPinchGestureRecognizer *)tapGesture).scale = 1.0;
+            UIPanGestureRecognizer * panGestureRecognizer = (UIPanGestureRecognizer *)tapGesture;
+            if (panGestureRecognizer.state == UIGestureRecognizerStateBegan || panGestureRecognizer.state == UIGestureRecognizerStateChanged) {
+                if (cycleViewCell.imagesView.x > cycleViewCell.imagesView.superview.width / 4 || cycleViewCell.imagesView.superview.width - CGRectGetMaxX(cycleViewCell.imagesView.frame) > cycleViewCell.imagesView.superview.width / 4 || cycleViewCell.imagesView.y > cycleViewCell.imagesView.superview.height / 4 || cycleViewCell.imagesView.superview.height - CGRectGetMaxY(cycleViewCell.imagesView.frame) > cycleViewCell.imagesView.superview.height / 4) {
+                    [UIView animateWithDuration:0.5 animations:^{
+                        cycleViewCell.imagesView.center = CGPointMake(cycleViewCell.imagesView.superview.width / 2, cycleViewCell.imagesView.superview.height / 2);
+                    } completion:^(BOOL finished) {
+                    }];
+                    [panGestureRecognizer setTranslation:CGPointZero inView:cycleViewCell.imagesView.superview];
+                    return;
+                }
+                CGPoint translation = [panGestureRecognizer translationInView:cycleViewCell.imagesView.superview];
+                [cycleViewCell.imagesView setCenter:(CGPoint){cycleViewCell.imagesView.center.x + translation.x, cycleViewCell.imagesView.center.y + translation.y}];
+                [panGestureRecognizer setTranslation:CGPointZero inView:cycleViewCell.imagesView.superview];
+            }
         }
             break;
         default:
@@ -319,6 +346,7 @@
     if (self.trBool) {
         cell.imagesView.transform = self.initTransform;
     }
+    cell.imagesView.center = cell.imagesView.superview.center;
     cell.imageScale = 1;
     cell.titleLabel.hidden = NO;
     cell.delegate = self;
@@ -393,24 +421,43 @@
         //代理
         [self.delegate ZJHCycleViewDelegateCollectionView:(UICollectionView *)scrollView didScrollItemAtIndexPath:[NSIndexPath indexPathForItem:self.pageControll.currentPage inSection:0]];
     }
-////////
-    NSInteger iCurrentPage = roundf(scrollView.contentOffset.x / scrollView.frame.size.width);
+    NSInteger iCurrentPage = roundf(scrollView.contentOffset.x / self.flowLayout.itemSize.width);
     static NSInteger currentPage = 0;
     if (iCurrentPage != currentPage) {
-//        self.imageScale = 1;
+        ZJHCycleViewCell * cell = (ZJHCycleViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:iCurrentPage - 1 inSection:0]];
+        ZJHCycleViewCell * cell1 = (ZJHCycleViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:iCurrentPage + 1 inSection:0]];
+        if (self.trBool) {
+            cell.imagesView.transform = self.initTransform;
+            cell.imagesView.center = cell.imagesView.superview.center;
+            cell1.imagesView.transform = self.initTransform;
+            cell1.imagesView.center = cell1.imagesView.superview.center;
+        }
+        cell.imageScale = 1;
+        cell1.imageScale = 1;
         currentPage = iCurrentPage;
     }
-
-///////
 }
-
-///////////////////////////
 
 //当前自动滚动的页面
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     //代理
     if ([self.delegate respondsToSelector:@selector(ZJHCycleViewDelegateCollectionView:didScrollItemAtIndexPath:)]) {
         [self.delegate ZJHCycleViewDelegateCollectionView:(UICollectionView *)scrollView didScrollItemAtIndexPath:[NSIndexPath indexPathForItem:self.pageControll.currentPage inSection:0]];
+    }
+    NSInteger iCurrentPage = roundf(scrollView.contentOffset.x / self.flowLayout.itemSize.width);
+    static NSInteger currentPage = 0;
+    if (iCurrentPage != currentPage) {
+        ZJHCycleViewCell * cell = (ZJHCycleViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:iCurrentPage - 1 inSection:0]];
+        ZJHCycleViewCell * cell1 = (ZJHCycleViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:iCurrentPage + 1 inSection:0]];
+        if (self.trBool) {
+            cell.imagesView.transform = self.initTransform;
+            cell.imagesView.center = cell.imagesView.superview.center;
+            cell1.imagesView.transform = self.initTransform;
+            cell1.imagesView.center = cell1.imagesView.superview.center;
+        }
+        cell.imageScale = 1;
+        cell1.imageScale = 1;
+        currentPage = iCurrentPage;
     }
 }
 
