@@ -21,7 +21,6 @@
     UITapGestureRecognizer * singleTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(singleTap:)];
     singleTap.numberOfTouchesRequired = 1;
     singleTap.numberOfTapsRequired = 1;
-
     [self addGestureRecognizer:singleTap];
     //添加双击隐藏标题事件
     UITapGestureRecognizer * doubleTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(cancelReviewTitle:)];
@@ -46,6 +45,7 @@
     [self addGestureRecognizer:pSaveImage];
 }
 
+//添加单击事件
 - (void)singleTap:(UITapGestureRecognizer *)singleTap {
     if ([self.delegate respondsToSelector:@selector(ZJHCycleViewCellDelegateTapsNumber:withZJHCycleViewCell:andTapGesture:)]) {
         [self.delegate ZJHCycleViewCellDelegateTapsNumber:1 withZJHCycleViewCell:self andTapGesture:singleTap];
@@ -72,8 +72,6 @@
         [self.delegate ZJHCycleViewCellDelegateTapsNumber:3 withZJHCycleViewCell:self andTapGesture:RotationGesture];
     }
 }
-
-
 
 // 处理拖拉手势
 - (void) panView:(UIPanGestureRecognizer *)panGestureRecognizer {
