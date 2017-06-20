@@ -138,7 +138,7 @@
             }
         }
             break;
-            case 5:
+        case 5:
         {
             if (self.autoScrolled && self.bannerImages.count > 1) {
                 [self.timer invalidate];
