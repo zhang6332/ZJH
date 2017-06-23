@@ -6,8 +6,8 @@
 //
 
 #import "ZJHButtonStyleView.h"
-@interface ZJHButtonStyleView()<UITextFieldDelegate,UITextViewDelegate>
 
+@interface ZJHButtonStyleView()<UITextFieldDelegate,UITextViewDelegate>
 
 @end
 
@@ -18,9 +18,9 @@
         andRightTextfieldText:(NSString *)tfText withLimitTextLength:(NSNumber *)textLength {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
-
+        
         self.leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 100, self.frame.size.height)];
-
+        
         self.leftLabel.backgroundColor = [UIColor whiteColor];
         self.leftLabel.text = leftTitle;
         CGSize size = [self.leftLabel sizeThatFits:CGSizeMake(self.leftLabel.width, self.leftLabel.height)];
@@ -49,11 +49,10 @@
             self.textField.parameterStr = [NSMutableString stringWithFormat:@"%d",99];
         }
         [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-
+        
         [self addSubview:rightView];
         [self addSubview:self.leftLabel];
         [self addSubview:self.textField];
-
     }
     return self;
 }
@@ -63,7 +62,7 @@
        andMiddleTextfieldText:(NSString *)tfText andRightButtonTitle:(NSString *)buttonTitle withLimitTextLength:(NSNumber *)textLength {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
-
+        
         self.leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 130, self.frame.size.height)];
         self.leftLabel.backgroundColor = [UIColor whiteColor];
         self.leftLabel.text = leftTitle;
@@ -85,7 +84,7 @@
         [self.rightButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self.rightButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         [self.rightButton setImage:[UIColor imageWithColor:[UIColor lightGrayColor]] forState:UIControlStateHighlighted];
-
+        
         //输入框
         self.textField = [[UITextField alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.leftLabel.frame), self.leftLabel.frame.origin.y,CGRectGetMinX(self.rightButton.frame) - CGRectGetMaxX(self.leftLabel.frame) - 5, self.leftLabel.frame.size.height)];
         self.textField.delegate = self;
@@ -107,18 +106,17 @@
             self.textField.parameterStr = [NSMutableString stringWithFormat:@"%d",99];
         }
         [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-
+        
         [self addSubview:self.rightButton];
         [self addSubview:self.leftLabel];
         [self addSubview:self.textField];
-        
     }
     return self;
 }
 
 //左label 中TextView 右button
 - (instancetype)initWithFrame:(CGRect)frame andLeftTitle:(NSString *)leftTitle
-       andMiddleTextViewText:(NSString *)tfText andRightButtonTitle:(NSString *)buttonTitle withLimitTextLength:(NSNumber *)textLength {
+        andMiddleTextViewText:(NSString *)tfText andRightButtonTitle:(NSString *)buttonTitle withLimitTextLength:(NSNumber *)textLength {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
         
@@ -163,7 +161,7 @@
         self.textView.textColor = [UIColor grayColor];
         self.textView.font = [UIFont systemFontOfSize:13];
         self.textView.text = tfText;
-
+        
         //键盘类型
         //self.textView.keyboardType = UIKeyboardTypeDecimalPad;
         //监听输入字符长度
@@ -179,6 +177,52 @@
     return self;
 }
 
+//上label 下textView
+- (instancetype)initWithFrame:(CGRect)frame andTopTitle:(NSString *)topTitle
+           bottomTextViewText:(NSString *)tvText withLimitTextLength:(NSNumber *)textLength {
+    if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor whiteColor];
+        
+        self.leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, self.width - 30, 30)];
+        self.leftLabel.backgroundColor = [UIColor whiteColor];
+        self.leftLabel.text = topTitle;
+        self.leftLabel.font = [UIFont systemFontOfSize:15];
+        self.leftLabel.textColor = [UIColor darkGrayColor];
+        CGSize size = [self.leftLabel sizeThatFits:CGSizeMake(self.leftLabel.width, self.leftLabel.height)];
+        self.leftLabel.size = size;
+        
+        //输入框
+        self.textView = [[UITextView alloc]initWithFrame:CGRectMake(self.leftLabel.x,CGRectGetMaxY(self.leftLabel.frame) + 5,self.width - 30, self.height - self.leftLabel.height)];
+        self.textView.layer.borderWidth = 1;
+        self.textView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        self.textView.layer.shadowColor = [UIColor grayColor].CGColor;
+        self.textView.delegate = self;
+        //是否允许编辑内容，默认为“YES”
+        self.textView.editable = YES;
+        //当文字超过视图的边框时是否允许滑动，默认为“YES”
+        self.textView.scrollEnabled = YES;
+        //文本显示的位置默认为居左
+        self.textView.textAlignment = NSTextAlignmentLeft;
+        //显示数据类型的连接模式（如电话号码、网址、地址等
+        self.textView.dataDetectorTypes = UIDataDetectorTypeAll;
+        self.textView.backgroundColor = [UIColor whiteColor];
+        self.textView.textColor = [UIColor grayColor];
+        self.textView.font = [UIFont systemFontOfSize:13];
+        self.textView.text = tvText;
+        
+        //键盘类型
+        //self.textView.keyboardType = UIKeyboardTypeDecimalPad;
+        //监听输入字符长度
+        if (textLength) {
+            self.textView.parameterStr = [NSMutableString stringWithFormat:@"%@",textLength];
+        }else {
+            self.textView.parameterStr = [NSMutableString stringWithFormat:@"%d",506];
+        }
+        [self addSubview:self.leftLabel];
+        [self addSubview:self.textView];
+    }
+    return self;
+}
 
 //左输入框 右button
 - (instancetype)initWithFrame:(CGRect)frame andLeftTextfieldText:(NSString *)tfText andRightButtonTitle:(NSString *)buttonTitle withLimitTextLength:(NSNumber *)textLength {
@@ -203,7 +247,7 @@
         self.textField.placeholder = tfText;
         self.textField.textColor = [UIColor colorWithRed:0.30f green:0.30f blue:0.30f alpha:1.00f];
         self.textField.font = [UIFont systemFontOfSize:13];
-//        self.textField.textAlignment = NSTextAlignmentCenter;
+        //        self.textField.textAlignment = NSTextAlignmentCenter;
         //键盘类型
         // self.textField.keyboardType = UIKeyboardTypeDecimalPad;
         // 设置是否在编辑时清空文本
@@ -219,10 +263,8 @@
         [self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
         [self addSubview:self.rightButton];
         [self addSubview:self.textField];
-        
     }
     return self;
-
 }
 
 //左label 右label
@@ -235,7 +277,7 @@
         self.leftLabel.text = string1;
         CGSize size = [self.leftLabel sizeThatFits:CGSizeMake(self.leftLabel.width, self.leftLabel.height)];
         self.leftLabel.width = size.width;
-       
+        
         self.rightLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.leftLabel.frame),self.leftLabel.frame.origin.y,self.frame.size.width - self.leftLabel.frame.origin.x - CGRectGetMaxX(self.leftLabel.frame),self.frame.size.height)];
         self.rightLabel.text = string2;
         self.rightLabel.textColor = [UIColor colorWithRed:0.30f green:0.30f blue:0.30f alpha:1.00f];
@@ -244,16 +286,12 @@
         
         [self addSubview:self.leftLabel];
         [self addSubview:self.rightLabel];
-
     }
     return self;
 }
 
-
 //左图片 右图片 中上左label 中上右label 中下label
-
 - (instancetype) initWithFrame:(CGRect)frame leftImage:(UIImage *)leftImage leftTopTitle:(NSString *)leftTitle rightTopTitle:(NSString *)rightTitle bottomTitle:(NSString *)bottomTitle andRightImage:(UIImage *)rightImage {
-    
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
         self.leftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 0, 40, 40)];
@@ -265,7 +303,7 @@
         self.rightImageView.center = CGPointMake(self.rightImageView.center.x,self.height / 2);
         self.rightImageView.image = rightImage;
         self.rightImageView.contentMode = UIViewContentModeScaleToFill;
-
+        
         self.leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.leftImageView.frame) + 3, 0, (CGRectGetMinX(self.rightImageView.frame)- CGRectGetMaxX(self.leftImageView.frame) - 6) / 2  , self.frame.size.height / 2)];
         self.leftLabel.text = leftTitle;
         self.leftLabel.font = [UIFont systemFontOfSize:15];
@@ -284,19 +322,15 @@
         self.bottomLabel.font = [UIFont systemFontOfSize:15];
         self.bottomLabel.textColor = [UIColor colorWithRed:0.20f green:0.20f blue:0.20f alpha:1.00f];
         self.bottomLabel.textAlignment = NSTextAlignmentLeft;
-
+        
         [self addSubview:self.leftImageView];
         [self addSubview:self.leftLabel];
         [self addSubview:self.rightLabel];
         [self addSubview:self.bottomLabel];
         [self addSubview:self.rightImageView];
-        
     }
-    
     return self;
-
 }
-
 
 //自定制选择按钮
 - (instancetype) initWithFrame:(CGRect)frame delegate:(id)delegate andTitleArray:(NSArray *)array setImageleft:(BOOL)leftBool {
@@ -363,7 +397,6 @@
     }
 }
 
-
 //平分视图添加button
 - (instancetype)initWithFrame:(CGRect)frame delegate:(id)delegate normalImageNameArray:(NSArray *) imageNames SelectedImageNameArray:(NSArray *)selectedImageNames andbottomTitles:(NSArray *)titles withLayerCornerRadiusScale:(NSNumber *)cornerRadius {
     if (self = [super initWithFrame:frame]) {
@@ -376,15 +409,15 @@
             button.tag = 605605 + i;
             [button setImage:[UIImage imageNamed:imageNames[i]] forState:UIControlStateNormal];
             [button setImage:[UIImage imageNamed:selectedImageNames[i]] forState:UIControlStateHighlighted];
-//            [button setImage:[UIImage imageNamed:selectedImageNames[i]] forState:UIControlStateSelected];
+            //            [button setImage:[UIImage imageNamed:selectedImageNames[i]] forState:UIControlStateSelected];
             if (titles.count) {
                 button.titleLabel.adjustsFontSizeToFitWidth = YES;
                 button.titleLabel.font = [UIFont systemFontOfSize:12];
                 [button setTitle:titles[i] forState:UIControlStateNormal];
                 [button layoutButtonWithEdgeInsetsStyle:ZJHButtonEdgeInsetsStyleTop imageTitleSpace:nil];
-                [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+                [button setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
                 [button setTitleColor:[UIColor colorWithRed:0.03f green:0.50f blue:1.00f alpha:1.00f] forState:UIControlStateHighlighted];
-//                [button setTitleColor:[UIColor colorWithRed:0.03f green:0.50f blue:1.00f alpha:1.00f] forState:UIControlStateSelected];
+                //                [button setTitleColor:[UIColor colorWithRed:0.03f green:0.50f blue:1.00f alpha:1.00f] forState:UIControlStateSelected];
             }
             if (cornerRadius) {
                 button.clipsToBounds = YES;
@@ -410,14 +443,10 @@
     [self reportDelegateMethodWithSelectedTitle:button.titleLabel.text parameterObject:object];
 }
 
-
-
 //左图片 右label
 - (instancetype) initWithFrame:(CGRect)frame leftImage:(UIImage *)leftImage rightTitle:(NSString *)rightTitle {
-    
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
-        
         self.leftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, (self.frame.size.height - 20) / 2, 20, 20)];
         self.leftImageView.image = leftImage;
         self.leftImageView.contentMode = UIViewContentModeScaleToFill;
@@ -430,13 +459,9 @@
         
         [self addSubview:self.leftImageView];
         [self addSubview:self.rightLabel];
-        
     }
-    
     return self;
 }
-
-
 
 //上label 下view
 - (instancetype) initWithFrame:(CGRect)frame andTitle:(NSString *)title {
@@ -454,7 +479,7 @@
         [self.leftLabel addSubview:self.bottomView];
         
         [self addSubview:self.leftLabel];
-
+        
     }
     return self;
 }
@@ -464,7 +489,6 @@
 - (instancetype) initWithFrame:(CGRect)frame topImage:(UIImage *)topImage andMiddleTitle:(NSString *)Middletitle andBottomTitle:(NSString *)bottomTitle {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
-        
         self.leftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.width * 4 / 5, self.width * 4 / 5)];
         self.leftImageView.center = CGPointMake(self.frame.size.width / 2, self.leftImageView.center.y);
         self.leftImageView.image = topImage;
@@ -491,15 +515,12 @@
         }
         //调整控件高度
         self.frame = CGRectMake(self.frame.origin.x,self.frame.origin.y, self.frame.size.width, CGRectGetMaxY(self.bottomLabel.frame));
-        
         [self addSubview:self.leftImageView];
         [self addSubview:self.leftLabel];
         [self addSubview:self.bottomLabel];
     }
     return self;
-
 }
-
 
 //中label 右图片
 - (instancetype) initWithFrame:(CGRect)frame leftLabelTitle:(NSString *)leftLabelTitle andRightImage:(UIImage *)rightImage {
@@ -521,8 +542,7 @@
         
         [self addSubview:self.rightImageView];
         [self addSubview:self.leftLabel];
-
-           }
+    }
     return self;
 }
 
@@ -542,7 +562,7 @@
         self.leftImageView.center = CGPointMake(self.leftImageView.center.x, self.leftLabel.center.y);
         self.leftImageView.contentMode = UIViewContentModeScaleAspectFit;
         self.leftImageView.image = leftImage;
-
+        
         
         self.rightImageView = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.leftLabel.frame), 0, 10, 10)];
         self.rightImageView.center = CGPointMake(self.rightImageView.center.x, self.leftLabel.center.y);
@@ -552,17 +572,14 @@
         [self addSubview:self.leftImageView];
         [self addSubview:self.rightImageView];
         [self addSubview:self.leftLabel];
-        
     }
     return self;
-
 }
 
 //左图右button中label
 - (instancetype) initWithFrame:(CGRect)frame leftImage:(UIImage *)leftImage middleLabelTitle:(NSString *)middleLabelTitle andRightButtonTitle:(NSString *)rightButtonTitle {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
-        
         self.leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width * 7 / 15, self.frame.size.height)];
         self.leftLabel.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
         self.leftLabel.font = [UIFont systemFontOfSize:14];
@@ -571,7 +588,7 @@
         self.leftLabel.textAlignment = NSTextAlignmentCenter;
         self.leftLabel.textColor = colorWithSix(@"#333333");
         self.leftLabel.text = middleLabelTitle;
-
+        
         self.leftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
         self.leftImageView.center = CGPointMake(self.width / 5, self.leftLabel.center.y);
         self.leftImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -588,11 +605,9 @@
         
     }
     return self;
-    
 }
 
-
-//textfieldDelegate
+//textfield代理
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
@@ -605,6 +620,7 @@
     }
     return YES;
 }
+
 //监听输入长度
 - (void)textFieldDidChange:(UITextField *)textField
 {
@@ -612,6 +628,7 @@
         textField.text = [textField.text substringToIndex:textField.parameterStr.intValue];
     }
 }
+
 - (void)textViewDidChange:(UITextView *)textView {
     if (textView.text.length > textView.parameterStr.intValue) {
         textView.text = [textView.text substringToIndex:textView.parameterStr.intValue];

@@ -36,7 +36,9 @@
 //左label 中textView 右button
 - (instancetype)initWithFrame:(CGRect)frame andLeftTitle:(NSString *)leftTitle
         andMiddleTextViewText:(NSString *)tfText andRightButtonTitle:(NSString *)buttonTitle withLimitTextLength:(NSNumber *)textLength;
-
+//上label 下textView
+- (instancetype)initWithFrame:(CGRect)frame andTopTitle:(NSString *)topTitle
+           bottomTextViewText:(NSString *)tvText withLimitTextLength:(NSNumber *)textLength;
 //左输入框 右按钮图片  图片验证码
 - (instancetype)initWithFrame:(CGRect)frame andLeftTextfieldText:(NSString *)tfText andRightButtonTitle:(NSString *)buttonTitle withLimitTextLength:(NSNumber *)textLength;
 
