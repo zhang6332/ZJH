@@ -69,12 +69,14 @@
 //判断手机号码格式是否正确
 + (BOOL)chackMobileFormat:(NSString *)mobile;
 
-//时间格式转换
+//时间戳格式化时间
 + (NSString *)changeTimeFormatString:(NSString *)string;
 //获取当前系统时间
 + (NSString *)obtainCurrentZoneTime;
 //获取当前时间戳
 + (NSString *)obtainCurrentTimestamp;
+//时间转时间戳
++ (NSString *)getTimestampFromTime:(NSString *)data;
 
 //截取字符串
 + (NSString *)jiequStringWithNum:(NSInteger)num string:(NSString *)string;

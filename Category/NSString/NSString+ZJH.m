@@ -202,7 +202,15 @@
     NSString * timeString = [NSString stringWithFormat:@"%.0f", time];
     return timeString;
 }
-
+//时间转时间戳毫秒
++ (NSString *)getTimestampFromTime:(NSString *)data {
+    NSDateFormatter *forMatter = [[NSDateFormatter alloc] init];
+    [forMatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    NSDate * dataTime = [forMatter dateFromString:data];
+    //转成时间戳
+    NSString * timeSp = [NSString stringWithFormat:@"%ld",(long)[dataTime timeIntervalSince1970] * 1000];
+    return timeSp;
+}
 
 #pragma mark - 截取字符串或者double小数点后几位
 + (NSString *)jiequStringWithNum:(NSInteger)num string:(NSString *)string {
