@@ -580,9 +580,9 @@
 - (instancetype) initWithFrame:(CGRect)frame leftImage:(UIImage *)leftImage middleLabelTitle:(NSString *)middleLabelTitle andRightButtonTitle:(NSString *)rightButtonTitle {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor whiteColor];
-        self.leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width * 7 / 15, self.frame.size.height)];
+        self.leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width * 1 / 2, self.frame.size.height)];
         self.leftLabel.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
-        self.leftLabel.font = [UIFont systemFontOfSize:14];
+        self.leftLabel.font = [UIFont systemFontOfSize:13];
         self.leftLabel .numberOfLines = 0;
         self.leftLabel.adjustsFontSizeToFitWidth = YES;
         self.leftLabel.textAlignment = NSTextAlignmentCenter;
@@ -590,19 +590,18 @@
         self.leftLabel.text = middleLabelTitle;
         
         self.leftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
-        self.leftImageView.center = CGPointMake(self.width / 5, self.leftLabel.center.y);
+        self.leftImageView.center = CGPointMake(self.width / 7, self.leftLabel.center.y);
         self.leftImageView.contentMode = UIViewContentModeScaleAspectFill;
         self.leftImageView.image = leftImage;
         
         self.rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
-        self.rightButton.center = CGPointMake(self.width * 4 / 5, self.leftLabel.center.y);
+        self.rightButton.center = CGPointMake(self.width * 6 / 7, self.leftLabel.center.y);
         self.rightButton.contentMode = UIViewContentModeScaleAspectFill;
         [self.rightButton setTitle:rightButtonTitle forState:UIControlStateNormal];;
         
         [self addSubview:self.leftImageView];
         [self addSubview:self.rightButton];
         [self addSubview:self.leftLabel];
-        
     }
     return self;
 }
