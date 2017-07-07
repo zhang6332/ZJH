@@ -19,7 +19,7 @@
 -(NSString *) md5HexDigest;
 + (NSString *)makemd5:(NSString *)str;
 
-//sha1加密
+//sha256加密
 + (NSString *)sha256:(NSString *)input;
 
 /**
@@ -102,5 +102,26 @@
 
 //转化为可以识别的URLstring(有汉字是使用)
 + (NSString *)stringToAllowString:(NSString *)unallowedString;
+
+/**
+ 判断该字符串是不是一个有效的URL
+ @return YES：是一个有效的URL or NO
+ */
+- (BOOL)isValidUrl;
+
+/** 根据图片名 判断是否是gif图 */
+- (BOOL)isGifImage;
+
+/** 根据图片data 判断是否是gif图 */
++ (BOOL)isGifWithImageData: (NSData *)data;
+
+/**
+ 根据image的data 判断图片类型
+ @param data 图片data
+ @return 图片类型(png、jpg...)
+ */
++ (NSString *)contentTypeWithImageData: (NSData *)data;
+
+
 
 @end

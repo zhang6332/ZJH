@@ -65,35 +65,44 @@
  */
 @property (nonatomic) CGFloat left;
 
-/**
- *  12.右 < Shortcut for frame.origin.x + frame.size.width
- */
+/**12.右 < Shortcut for frame.origin.x + frame.size.width*/
 @property (nonatomic) CGFloat right;
-
 
 /**
  *  1.添加边框
- *
  *  @param color color description
  */
 - (void)addBorderColor:(UIColor *)color;
 
 /**
  *  2.UIView 的点击事件
- *
  *  @param target   目标
  *  @param action   事件
  */
+- (void)addTarget:(id)target action:(SEL)action;
 
-- (void)addTarget:(id)target
-           action:(SEL)action;
-
+/**
+ 快速创建AlertController：包括Alert 和 ActionSheet
+ @param title       标题文字
+ @param message     消息体文字
+ @param actions     可选择点击的按钮（不包括取消）
+ @param cancelTitle 取消按钮（可自定义按钮文字）
+ @param style       类型：Alert 或者 ActionSheet
+ @param completion  完成点击按钮之后的回调（不包括取消）
+ */
++ (void)showAlertWithTitle: (NSString *)title message: (NSString *)message actionTitles: (NSArray<NSString *> *)actions cancelTitle: (NSString *)cancelTitle style: (UIAlertControllerStyle)style completion: (void(^)(NSInteger index))completion;
 
 #pragma mark - 圆角
 - (void)setRoundedCorners:(UIRectCorner)corners radius:(CGSize)size;
 
 #pragma mark - 以递归的方式遍历(查找)subview
 - (UIView*)findViewRecursively:(BOOL(^)(UIView* subview, BOOL* stop))recurse;
+
+/**
+ 寻找当前view所在的主视图控制器
+ @return 返回当前主视图控制器
+ */
+- (UIViewController *)viewController;
 
 /** 字符串 */
 @property (nonatomic ,copy) NSMutableString * parameterStr;

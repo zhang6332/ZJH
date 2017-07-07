@@ -30,8 +30,8 @@
         self.rightLabel.textColor = [UIColor colorWithRed:0.60f green:0.60f blue:0.60f alpha:1.00f];
         self.rightLabel.text = @"现金管理 随时存取";
         self.rightLabel.font = [UIFont systemFontOfSize:13];
-        UIView * lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 49, [UIScreen mainScreen].bounds.size.width, 1)];
-        lineView.backgroundColor = colorWithSix(@"#F5F5F5");
+        UIView * lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 49.5, [UIScreen mainScreen].bounds.size.width, 0.5)];
+        lineView.backgroundColor = [UIColor lightGrayColor];
         [self addSubview:lineView];
         [self addSubview:self.leftImageView];
         [self addSubview:self.leftLabel];

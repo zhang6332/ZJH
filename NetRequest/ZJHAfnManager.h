@@ -49,7 +49,7 @@
  @param success 成功的回调
  @param failure 失败的回调
  */
-- (void)requestPUTWithPath:(NSString *)path parameters:(id)parameters submittingToken:(BOOL)booltoken showHUDToView:(UIView *)HUDView formData:(NSString *)data success:(void(^)(ZJHModelResponse * response))success error:(void(^)(NSError * error))failure;
+- (void)requestPUTWithPath:(NSString *)path parameters:(id)parameters submittingToken:(BOOL)booltoken showHUDToView:(UIView *)HUDView success:(void(^)(id  response))success error:(void(^)(NSError *error))failure;
 
 //上传文件
 - (void)uploadImagesWithPath:(NSString *)path parameters:(id)parameters submittingToken:(BOOL)booltoken showHUDToView:(UIView *)HUDView images:(NSArray *)file imageNames:(NSArray *)names success:(void(^)(ZJHModelResponse *response))success error:(void(^)(NSError * error))failure;

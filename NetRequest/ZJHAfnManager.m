@@ -314,7 +314,7 @@
     [dataTask resume];
 }
 
-- (void)requestPUTWithPath:(NSString *)path parameters:(id)parameters submittingToken:(BOOL)booltoken showHUDToView:(UIView *)HUDView formData:(NSString *)data success:(void(^)(ZJHModelResponse *response))success error:(void(^)(NSError *error))failure {
+- (void)requestPUTWithPath:(NSString *)path parameters:(id)parameters submittingToken:(BOOL)booltoken showHUDToView:(UIView *)HUDView success:(void(^)(id  response))success error:(void(^)(NSError *error))failure {
     if (!parameters) {
         parameters = [NSMutableDictionary dictionary];
     }
@@ -330,45 +330,32 @@
             [MBProgressHUD showHUDAddedTo:HUDView animated:YES];
         });
     }
-    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    manager.responseSerializer = self.responseSerializer;
-    manager.securityPolicy  = self.securityPolicy;
-    ///////
-    NSMutableURLRequest * request = [self.requestSerializer requestWithMethod:@"PUT" URLString:path parameters:parameters error:nil];
-    [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [[manager dataTaskWithRequest:request uploadProgress:^(NSProgress * _Nonnull uploadProgress) {
-        
-    } downloadProgress:^(NSProgress * _Nonnull downloadProgress) {
-        
-    } completionHandler:^(NSURLResponse * _Nonnull response, id _Nullable responseObject, NSError * _Nullable error) {
-        if (!error) {
-            ZJHModelResponse *response1 = [ZJHModelResponse mj_objectWithKeyValues:responseObject];
-                if (success) {
-                    //结束加载
-                    if (HUDView) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideAllHUDsForView:HUDView animated:YES];
-                    });
-                    }
-                    success(response1);
-                }
-        } else {
-            if (failure) {
-                //结束加载
-                if (HUDView) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideAllHUDsForView:HUDView animated:YES];
-                    });
-                }
+    [self PUT:path parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        ZJHModelResponse *response = [ZJHModelResponse mj_objectWithKeyValues:responseObject];
+        if (success) {
+            //结束加载
+            if (HUDView) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD showError:error.localizedDescription];
+                    [MBProgressHUD hideAllHUDsForView:HUDView animated:YES];
                 });
-                NSLog(@"%@",error.description);//打印错误原因
-                failure(error);
             }
+            success(response);
         }
-    }] resume];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) {
+            //结束加载
+            if (HUDView) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:HUDView animated:YES];
+                });
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD showError:error.localizedDescription];
+            });
+            NSLog(@"%@",error.description);//打印错误原因
+            failure(error);
+        }
+    }];
 }
 
 - (void)uploadImagesWithPath:(NSString *)path parameters:(id)parameters submittingToken:(BOOL)booltoken showHUDToView:(UIView *)HUDView images:(NSArray *)file imageNames:(NSArray *)names success:(void(^)(ZJHModelResponse *response))success error:(void(^)(NSError *error))failure {

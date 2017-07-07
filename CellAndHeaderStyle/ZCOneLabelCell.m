@@ -1,17 +1,18 @@
 //
-//  ZJHMarginCell.m
+//  ZCOneLabelCell.m
 //  ancientMap
 //
-//  Created by Apple on 2017/5/15.
+//  Created by Apple on 2017/6/27.
 //  Copyright © 2017年 张家浩. All rights reserved.
 //
 
-#import "ZJHMarginCell.h"
+#import "ZCOneLabelCell.h"
 
-@implementation ZJHMarginCell
+@implementation ZCOneLabelCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    // Initialization code
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

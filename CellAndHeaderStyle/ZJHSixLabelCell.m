@@ -1,17 +1,18 @@
 //
-//  ZJHMarginCell.m
+//  ZJHSixLabelCell.m
 //  ancientMap
 //
-//  Created by Apple on 2017/5/15.
+//  Created by Apple on 2017/6/26.
 //  Copyright © 2017年 张家浩. All rights reserved.
 //
 
-#import "ZJHMarginCell.h"
+#import "ZJHSixLabelCell.h"
 
-@implementation ZJHMarginCell
+@implementation ZJHSixLabelCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    // Initialization code
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
